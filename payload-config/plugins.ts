@@ -1,0 +1,97 @@
+import type { Config } from "payload";
+import type { Page } from "@/payload-types";
+
+import { redirectsPlugin } from "@payloadcms/plugin-redirects";
+import { seoPlugin } from "@payloadcms/plugin-seo";
+import { convertLexicalToPlaintext } from "@payloadcms/richtext-lexical/plaintext";
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
+
+import { revalidateRedirects } from "@/payload/hooks/revalidate-redirects";
+
+const isVercelBlobEnabled =
+  process.env.NODE_ENV === "production" &&
+  process.env.BLOB_READ_WRITE_TOKEN?.startsWith("vercel_blob_rw_");
+
+const vercelBlobPluginConfig = isVercelBlobEnabled
+  ? vercelBlobStorage({
+      enabled: true,
+      collections: {
+        media: {
+          prefix: "dg-template/",
+        },
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    })
+  : null;
+export const seoPluginConfig = seoPlugin({
+  collections: ["posts", "pages"],
+  globals: ["home-page", "contact-page", "blog-page"],
+  uploadsCollection: "media",
+  tabbedUI: true,
+  generateTitle: ({ doc, collectionSlug }) =>
+    `${collectionSlug === "pages" && doc.label ? doc.label : doc.title} | ACME`,
+  generateDescription: ({ doc, collectionSlug }) => {
+    if (collectionSlug === "pages") {
+      const document = doc as Page;
+      if (document.hero?.description) {
+        return convertLexicalToPlaintext({ data: document.hero.description });
+      }
+      return "";
+    }
+
+    if (collectionSlug === "posts" && doc?.description) {
+      return convertLexicalToPlaintext({ data: doc.description });
+    }
+
+    return "";
+  },
+  generateImage: ({ doc, collectionSlug }) => {
+    if (collectionSlug === "pages") {
+      return doc.hero?.image || null;
+    }
+
+    if ("image" in doc) {
+      return doc.image;
+    }
+
+    return null;
+  },
+});
+
+export const redirectPluginConfig = redirectsPlugin({
+  collections: ["posts", "pages"],
+  overrides: {
+    labels: {
+      singular: { es: "Redirección", en: "Redirect" },
+      plural: { es: "Redirecciones", en: "Redirects" },
+    },
+    admin: {
+      group: { en: "Settings", es: "Ajustes" },
+    },
+    hooks: {
+      afterChange: [revalidateRedirects],
+    },
+    // @ts-expect-error
+    fields: ({ defaultFields }) =>
+      defaultFields.map((field) => {
+        if ("name" in field && field.name === "from") {
+          return {
+            ...field,
+            admin: {
+              description: {
+                en: "Introduce the URL of the page from which you want to redirect.",
+                es: "Introduce la URL de la página desde la cual deseas redirigir.",
+              },
+            },
+          };
+        }
+        return field;
+      }),
+  },
+});
+
+export const plugins: NonNullable<Config["plugins"]> = [
+  vercelBlobPluginConfig,
+  seoPluginConfig,
+  redirectPluginConfig,
+].filter(Boolean) as NonNullable<Config["plugins"]>;
