@@ -20,7 +20,7 @@ describe("getServerSideURL", () => {
   });
 
   it("returns localhost when no production URL is set", () => {
-    delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
+    process.env.VERCEL_PROJECT_PRODUCTION_URL = undefined;
     expect(getServerSideURL()).toBe("http://localhost:3000");
   });
 });

@@ -9,7 +9,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Media } from "@/components/blocks/media";
 import { RichText } from "@/components/shared/rich-text";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { formatLongDate } from "@/lib/utils";
+import { formatLongDate, slugify } from "@/lib/utils";
 import placeholder from "@/public/placeholder.svg";
 
 interface PostHeroProps {
@@ -50,7 +50,7 @@ export const PostHero = ({
             {categoriesList.map((category) => (
               <Link
                 className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 font-medium text-primary text-xs uppercase tracking-wider transition-colors hover:bg-primary/20"
-                href={`/blog?category=${category.slug}`}
+                href={`/blog?category=${slugify(category.title)}`}
                 key={category.id}
               >
                 {category.title}

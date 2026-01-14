@@ -43,23 +43,41 @@ export function ContactForm({ title, subtitle, className }: Props) {
   });
 
   async function onSubmit(values: z.infer<typeof contactEmailSchema>) {
-    const result = await fetch("/api/v1/leads", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-
-    if (result.ok) {
-      form.reset();
-      toast.success("Mensaje enviado", {
-        description: "Gracias por contactarnos",
+    try {
+      const result = await fetch("/api/v1/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       });
-    } else {
-      toast.error("Algo ha ido mal", {
+
+      if (result.ok) {
+        form.reset();
+        toast.success("Mensaje enviado", {
+          description: "Gracias por contactarnos. Te responderemos pronto.",
+        });
+      } else if (result.status === 400) {
+        toast.error("Datos inválidos", {
+          description: "Por favor, revisa los campos del formulario.",
+        });
+      } else if (result.status >= 500) {
+        toast.error("Error del servidor", {
+          description:
+            "Nuestro servidor está teniendo problemas. Inténtalo más tarde.",
+        });
+      } else {
+        toast.error("Algo ha ido mal", {
+          description:
+            "Vuelve a intentarlo más tarde o prueba otros medios de contacto.",
+        });
+      }
+    } catch (error) {
+      // Network error or request failed
+      console.error("[ContactForm] Submit error:", error);
+      toast.error("Error de conexión", {
         description:
-          "Vuelve a intentarlo más tarde o prueba otros medios de contacto",
+          "No se pudo conectar con el servidor. Comprueba tu conexión a internet.",
       });
     }
   }

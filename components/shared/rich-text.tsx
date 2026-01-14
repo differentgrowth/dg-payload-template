@@ -62,7 +62,7 @@ function isMarkdownCodeBlock(text: string): {
   }
 
   const firstLine = lines[0].trim();
-  const lastLine = lines[lines.length - 1].trim();
+  const lastLine = lines.at(-1).trim();
 
   const startMatch = firstLine.match(CODE_BLOCK_START_REGEX);
   const endsWithBackticks = CODE_BLOCK_END_REGEX.test(lastLine);
@@ -80,6 +80,55 @@ function isMarkdownCodeBlock(text: string): {
   return { isCode: false, language: "", code: "" };
 }
 
+interface NodeType {
+  type: string;
+  children?: Array<{ text?: string; type?: string; [key: string]: unknown }>;
+  [key: string]: unknown;
+}
+
+// Create a code block node from language and code
+function createCodeBlockNode(language: string, code: string): NodeType {
+  return {
+    type: "code-block",
+    language,
+    code,
+    version: 1,
+  };
+}
+
+// Try to find a multi-paragraph code block starting at index i
+// Returns the new index to continue from, or -1 if no code block was found
+function tryParseMultiParagraphCodeBlock(
+  children: NodeType[],
+  startIndex: number,
+  text: string,
+  newChildren: NodeType[]
+): number {
+  const startMatch = text.match(CODE_BLOCK_START_REGEX);
+  if (!startMatch) {
+    return -1;
+  }
+
+  const language = startMatch[1] || "";
+  const codeLines: string[] = [];
+  let j = startIndex + 1;
+
+  while (j < children.length) {
+    const nextNode = children[j];
+    const nextText = extractTextFromNode(nextNode);
+
+    if (CODE_BLOCK_END_REGEX.test(nextText.trim())) {
+      newChildren.push(createCodeBlockNode(language, codeLines.join("\n")));
+      return j + 1;
+    }
+
+    codeLines.push(nextText);
+    j++;
+  }
+
+  return -1;
+}
+
 // Pre-process Lexical data to convert markdown code blocks
 function preprocessMarkdownCodeBlocks(
   data: SerializedEditorState
@@ -88,12 +137,6 @@ function preprocessMarkdownCodeBlocks(
     return data;
   }
 
-  type NodeType = {
-    type: string;
-    children?: Array<{ text?: string; type?: string; [key: string]: unknown }>;
-    [key: string]: unknown;
-  };
-
   const children = data.root.children as NodeType[];
   const newChildren: NodeType[] = [];
   let i = 0;
@@ -101,60 +144,36 @@ function preprocessMarkdownCodeBlocks(
   while (i < children.length) {
     const node = children[i];
 
-    // Check if this is a paragraph
-    if (node.type === "paragraph") {
-      const text = extractTextFromNode(node);
-
-      // Check if the entire paragraph is a code block (with newlines from <br> tags)
-      const codeBlockCheck = isMarkdownCodeBlock(text);
-      if (codeBlockCheck.isCode) {
-        newChildren.push({
-          type: "code-block",
-          language: codeBlockCheck.language,
-          code: codeBlockCheck.code,
-          version: 1,
-        });
-        i++;
-        continue;
-      }
-
-      // Check if this paragraph starts a multi-paragraph code block
-      const startMatch = text.match(CODE_BLOCK_START_REGEX);
-      if (startMatch) {
-        const language = startMatch[1] || "";
-        const codeLines: string[] = [];
-        let j = i + 1;
-
-        // Collect all paragraphs until we find one ending with ```
-        while (j < children.length) {
-          const nextNode = children[j];
-          const nextText = extractTextFromNode(nextNode);
-
-          // Check if this paragraph ends the code block
-          if (CODE_BLOCK_END_REGEX.test(nextText.trim())) {
-            // Create a code block node
-            newChildren.push({
-              type: "code-block",
-              language,
-              code: codeLines.join("\n"),
-              version: 1,
-            });
-            i = j + 1;
-            break;
-          }
-
-          codeLines.push(nextText);
-          j++;
-        }
-
-        // If we found a closing ```, continue to next iteration
-        if (i === j + 1) {
-          continue;
-        }
-      }
+    if (node.type !== "paragraph") {
+      newChildren.push(node);
+      i++;
+      continue;
     }
 
-    // Not a code block, keep the original node
+    const text = extractTextFromNode(node);
+
+    // Check if the entire paragraph is a code block
+    const codeBlockCheck = isMarkdownCodeBlock(text);
+    if (codeBlockCheck.isCode) {
+      newChildren.push(
+        createCodeBlockNode(codeBlockCheck.language, codeBlockCheck.code)
+      );
+      i++;
+      continue;
+    }
+
+    // Check for multi-paragraph code block
+    const newIndex = tryParseMultiParagraphCodeBlock(
+      children,
+      i,
+      text,
+      newChildren
+    );
+    if (newIndex !== -1) {
+      i = newIndex;
+      continue;
+    }
+
     newChildren.push(node);
     i++;
   }
@@ -163,7 +182,7 @@ function preprocessMarkdownCodeBlocks(
     ...data,
     root: {
       ...data.root,
-      children: newChildren,
+      children: newChildren as typeof data.root.children,
     },
   };
 }
@@ -204,10 +223,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({
   },
   // Handle Lexical's native code nodes (if any)
   code: ({ node, nodesToJSX }) => {
-    const codeNode = node as unknown as {
-      language?: string;
-      children?: unknown[];
-    };
+    const codeNode = node as { language?: string; children?: NodeTypes[] };
     return (
       <pre className="my-6 overflow-x-auto rounded-xl border border-border bg-muted p-5">
         <code

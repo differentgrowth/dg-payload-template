@@ -13,6 +13,8 @@ import {
 
 // Test regex patterns at top level
 const DATE_FORMAT_PATTERN = /\d{2}\/\d{2}\/\d{4}/;
+const CURRENCY_PATTERN = /1[.,]?234[,.]56/;
+const CURRENCY_ZERO_PATTERN = /0[,.]00/;
 
 describe("cn", () => {
   it("merges class names correctly", () => {
@@ -97,13 +99,13 @@ describe("currency", () => {
     const result = currency(1234.56);
     // Currency format may vary by locale/environment
     expect(result).toContain("€");
-    expect(result).toMatch(/1[.,]?234[,.]56/);
+    expect(result).toMatch(CURRENCY_PATTERN);
   });
 
   it("handles zero", () => {
     const result = currency(0);
     expect(result).toContain("€");
-    expect(result).toMatch(/0[,.]00/);
+    expect(result).toMatch(CURRENCY_ZERO_PATTERN);
   });
 });
 

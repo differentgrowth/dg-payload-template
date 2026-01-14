@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback } from "react";
+
 import { Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
@@ -9,10 +11,14 @@ import { Button } from "@/components/ui/button";
 export function ModeToggle({ className }: { className?: string }) {
   const { setTheme, theme } = useTheme();
 
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === "light" ? "dark" : "light");
+  }, [setTheme, theme]);
+
   return (
     <Button
       className={className}
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={toggleTheme}
       size="icon"
       variant="outline"
     >

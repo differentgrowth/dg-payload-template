@@ -1,4 +1,7 @@
-import type { FeaturedPostsBlock as FeaturedPostsBlockProps } from "@/payload-types";
+import type {
+  FeaturedPostsBlock as FeaturedPostsBlockProps,
+  Post,
+} from "@/payload-types";
 
 import { PostsList } from "@/components/blog/posts-list";
 import { cn } from "@/lib/utils";
@@ -9,7 +12,14 @@ type Props = FeaturedPostsBlockProps & {
 };
 
 export async function FeaturedPosts({ title, subtitle, className }: Props) {
-  const { docs: posts } = await getFeaturedPosts();
+  let posts: Post[] = [];
+  try {
+    const result = await getFeaturedPosts();
+    posts = result.docs;
+  } catch (error) {
+    console.error("[FeaturedPosts] Failed to fetch posts:", error);
+    return null;
+  }
 
   if (!posts.length) {
     return null;

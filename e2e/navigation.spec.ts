@@ -1,23 +1,34 @@
 import { expect, test } from "@playwright/test";
 
+// Regex patterns at top level for performance
+const BLOG_LINK_PATTERN = /blog/i;
+const BLOG_URL_PATTERN = /\/blog/;
+const CONTACTO_PATTERN = /contacto/i;
+const CONTACTO_URL_PATTERN = /\/contacto/;
+const HOME_LINK_PATTERN = /inicio|home|volver/i;
+
 test.describe("Navigation", () => {
   test("can navigate from homepage to blog", async ({ page }) => {
     await page.goto("/");
 
-    const blogLink = page.getByRole("link", { name: /blog/i }).first();
+    const blogLink = page
+      .getByRole("link", { name: BLOG_LINK_PATTERN })
+      .first();
     if (await blogLink.isVisible()) {
       await blogLink.click();
-      await expect(page).toHaveURL(/\/blog/);
+      await expect(page).toHaveURL(BLOG_URL_PATTERN);
     }
   });
 
   test("can navigate from homepage to contact", async ({ page }) => {
     await page.goto("/");
 
-    const contactLink = page.getByRole("link", { name: /contacto/i }).first();
+    const contactLink = page
+      .getByRole("link", { name: CONTACTO_PATTERN })
+      .first();
     if (await contactLink.isVisible()) {
       await contactLink.click();
-      await expect(page).toHaveURL(/\/contacto/);
+      await expect(page).toHaveURL(CONTACTO_URL_PATTERN);
     }
   });
 
@@ -71,7 +82,7 @@ test.describe("404 Page", () => {
     await page.goto("/this-page-does-not-exist-12345");
 
     // Should have a way to navigate back to homepage
-    const homeLink = page.getByRole("link", { name: /inicio|home|volver/i });
+    const homeLink = page.getByRole("link", { name: HOME_LINK_PATTERN });
     if (await homeLink.isVisible()) {
       await expect(homeLink).toBeVisible();
     }

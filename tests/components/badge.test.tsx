@@ -46,6 +46,7 @@ describe("Badge", () => {
   });
 
   it("renders as a link when using render prop", () => {
+    // biome-ignore lint/a11y/useAnchorContent: Content is provided via Badge children prop
     render(<Badge render={<a href="/test" />}>Link Badge</Badge>);
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("href", "/test");

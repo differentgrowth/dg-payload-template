@@ -1,12 +1,15 @@
 import { expect, test } from "@playwright/test";
 
+// Regex patterns at top level for performance
+const BLOG_PATTERN = /blog/i;
+
 test.describe("Blog Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/blog");
   });
 
   test("has correct title", async ({ page }) => {
-    await expect(page).toHaveTitle(/blog/i);
+    await expect(page).toHaveTitle(BLOG_PATTERN);
   });
 
   test("displays blog header", async ({ page }) => {

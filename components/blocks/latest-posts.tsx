@@ -1,4 +1,7 @@
-import type { LatestPostsBlock as LatestPostsBlockProps } from "@/payload-types";
+import type {
+  LatestPostsBlock as LatestPostsBlockProps,
+  Post,
+} from "@/payload-types";
 
 import { PostsList } from "@/components/blog/posts-list";
 import { cn } from "@/lib/utils";
@@ -9,7 +12,14 @@ type Props = LatestPostsBlockProps & {
 };
 
 export async function LatestPosts({ title, subtitle, className }: Props) {
-  const { docs: posts } = await getPosts({ page: 1, quantity: 3 });
+  let posts: Post[] = [];
+  try {
+    const result = await getPosts({ page: 1, quantity: 3 });
+    posts = result.docs;
+  } catch (error) {
+    console.error("[LatestPosts] Failed to fetch posts:", error);
+    return null;
+  }
 
   if (!posts.length) {
     return null;

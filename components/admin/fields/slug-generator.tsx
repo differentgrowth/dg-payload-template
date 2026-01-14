@@ -2,7 +2,7 @@
 
 import type { TextFieldClientProps } from "payload";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import {
   Button,
@@ -30,13 +30,17 @@ export const SlugGenerator = ({
     ([fields]) => fields[targetField]?.value as string
   );
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     const formattedSlug = slugify(targetFieldValue);
 
     if (value !== formattedSlug) {
       setValue(formattedSlug);
     }
-  };
+  }, [targetFieldValue, value, setValue]);
+
+  const toggleLock = useCallback(() => {
+    setIsLocked((prev) => !prev);
+  }, []);
 
   return (
     <div className="mb-5 flex flex-col">
@@ -45,7 +49,7 @@ export const SlugGenerator = ({
         <Button
           buttonStyle="secondary"
           className="lock-button"
-          onClick={() => setIsLocked(!isLocked)}
+          onClick={toggleLock}
         >
           {isLocked ? "Desbloquear" : "Bloquear"}
         </Button>

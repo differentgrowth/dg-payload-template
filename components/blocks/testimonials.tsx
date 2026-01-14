@@ -1,5 +1,7 @@
 import type { TestimonialsBlock as TestimonialsBlockProps } from "@/payload-types";
 
+import { memo } from "react";
+
 import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
@@ -116,7 +118,7 @@ export const Testimonials = ({
   );
 };
 
-function TestimonialCard({
+const TestimonialCard = memo(function TestimonialCard({
   url,
   name,
   content,
@@ -182,4 +184,4 @@ function TestimonialCard({
       </blockquote>
     </article>
   );
-}
+});

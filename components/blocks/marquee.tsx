@@ -3,6 +3,7 @@ import type {
   Media as MediaType,
 } from "@/payload-types";
 
+import { memo } from "react";
 import Image from "next/image";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -142,7 +143,11 @@ export const Marquee = ({ className, style, images }: Props) => {
   );
 };
 
-const ImageCard = ({ image }: { image: number | MediaType }) => {
+const ImageCard = memo(function ImageCard({
+  image,
+}: {
+  image: number | MediaType;
+}) {
   if (typeof image === "number" || !image?.sizes?.small?.url) {
     return null;
   }
@@ -160,4 +165,4 @@ const ImageCard = ({ image }: { image: number | MediaType }) => {
       </CardContent>
     </Card>
   );
-};
+});

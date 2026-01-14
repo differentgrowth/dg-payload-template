@@ -2,14 +2,6 @@ import type { Metadata, Viewport } from "next";
 
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 
-import {
-  Alert02Icon,
-  CheckmarkCircle02Icon,
-  InformationCircleIcon,
-  Loading01Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-
 import { TailwindIndicator } from "@/components/shared/tailwind-indicator";
 import { ThemeProvider } from "@/components/theme/provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -111,25 +103,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
           <Toaster
             closeButton
-            icons={{
-              success: (
-                <HugeiconsIcon
-                  className="size-4"
-                  icon={CheckmarkCircle02Icon}
-                />
-              ),
-              info: (
-                <HugeiconsIcon
-                  className="size-4"
-                  icon={InformationCircleIcon}
-                />
-              ),
-              warning: <HugeiconsIcon className="size-4" icon={Alert02Icon} />,
-              error: <HugeiconsIcon className="size-4" icon={Alert02Icon} />,
-              loading: (
-                <HugeiconsIcon className="size-4" icon={Loading01Icon} />
-              ),
-            }}
             richColors
             toastOptions={{
               classNames: {

@@ -1,19 +1,24 @@
 import { expect, test } from "@playwright/test";
 
+// Regex patterns at top level for performance
+const ACME_PATTERN = /ACME/i;
+const DIFFERENT_GROWTH_PATTERN = /different growth/i;
+const MENU_PATTERN = /menu/i;
+
 test.describe("Homepage", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
   });
 
   test("has correct title", async ({ page }) => {
-    await expect(page).toHaveTitle(/ACME/i);
+    await expect(page).toHaveTitle(ACME_PATTERN);
   });
 
   test("displays header with logo", async ({ page }) => {
     const header = page.locator("header");
     await expect(header).toBeVisible();
 
-    const logo = header.getByRole("link", { name: /different growth/i });
+    const logo = header.getByRole("link", { name: DIFFERENT_GROWTH_PATTERN });
     await expect(logo).toBeVisible();
   });
 
@@ -28,7 +33,9 @@ test.describe("Homepage", () => {
   });
 
   test("logo links to homepage", async ({ page }) => {
-    const logo = page.getByRole("link", { name: /different growth/i }).first();
+    const logo = page
+      .getByRole("link", { name: DIFFERENT_GROWTH_PATTERN })
+      .first();
     await expect(logo).toHaveAttribute("href", "/");
   });
 
@@ -59,7 +66,7 @@ test.describe("Homepage", () => {
     await expect(header).toBeVisible();
 
     // Mobile menu button should be visible
-    const mobileMenuButton = page.getByRole("button", { name: /menu/i });
+    const mobileMenuButton = page.getByRole("button", { name: MENU_PATTERN });
     if (await mobileMenuButton.isVisible()) {
       await expect(mobileMenuButton).toBeVisible();
     }

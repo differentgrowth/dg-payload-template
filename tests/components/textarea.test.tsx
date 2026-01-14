@@ -86,13 +86,25 @@ describe("Textarea", () => {
 
   it("supports controlled value", () => {
     const { rerender } = render(
-      <Textarea data-testid="textarea" onChange={() => {}} value="Initial" />
+      <Textarea
+        data-testid="textarea"
+        onChange={() => {
+          // Controlled input handler
+        }}
+        value="Initial"
+      />
     );
     const textarea = screen.getByTestId("textarea");
     expect(textarea).toHaveValue("Initial");
 
     rerender(
-      <Textarea data-testid="textarea" onChange={() => {}} value="Updated" />
+      <Textarea
+        data-testid="textarea"
+        onChange={() => {
+          // Controlled input handler
+        }}
+        value="Updated"
+      />
     );
     expect(textarea).toHaveValue("Updated");
   });
