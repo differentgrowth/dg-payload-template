@@ -1,8 +1,7 @@
 "use client";
 
+import type { Ref } from "react";
 import type { Media as MediaType } from "@/payload-types";
-
-import { type Ref, useRef } from "react";
 
 import { getClientSideURL } from "@/lib/get-url";
 import { cn } from "@/lib/utils";
@@ -17,8 +16,6 @@ interface Props {
 }
 
 export const MediaVideo = ({ onClick, resource, videoClassName }: Props) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
   if (!resource || typeof resource !== "object") {
     return null;
   }
@@ -43,7 +40,6 @@ export const MediaVideo = ({ onClick, resource, videoClassName }: Props) => {
       onClick={onClick}
       playsInline
       poster={poster}
-      ref={videoRef}
     >
       <source src={src} />
     </video>

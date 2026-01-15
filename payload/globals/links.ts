@@ -2,6 +2,7 @@
 import type { GlobalConfig } from "payload";
 
 import { admins, anyone } from "@/lib/access";
+import { linkField } from "@/payload/fields/link";
 import { revalidateLinks } from "@/payload/hooks/revalidate-links";
 
 export const Links: GlobalConfig = {
@@ -35,12 +36,7 @@ export const Links: GlobalConfig = {
           type: "text",
           required: true,
         },
-        {
-          name: "url",
-          label: { es: "URL", en: "URL" },
-          type: "text",
-          required: true,
-        },
+        linkField({ type: "any", required: true }),
       ],
     },
   ],

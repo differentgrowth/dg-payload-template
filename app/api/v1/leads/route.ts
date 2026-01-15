@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { after, type NextRequest, NextResponse } from "next/server";
 import { getPayload } from "payload";
 
 import configPromise from "@payload-config";
@@ -33,6 +33,12 @@ export async function POST(
         },
       },
     });
+
+    // Non-blocking logging after response is sent
+    after(() => {
+      console.info(`[Lead] Created: ${validation.data.email} (ID: ${lead.id})`);
+    });
+
     return NextResponse.json({ lead: lead.id }, { status: 201 });
   } catch (_error) {
     return NextResponse.json(

@@ -11,8 +11,20 @@ type Props = FeaturedPostsBlockProps & {
   className?: string;
 };
 
+type PostData = Pick<
+  Post,
+  | "slug"
+  | "categories"
+  | "title"
+  | "description"
+  | "id"
+  | "image"
+  | "publishedAt"
+  | "authors"
+>;
+
 export async function FeaturedPosts({ title, subtitle, className }: Props) {
-  let posts: Post[] = [];
+  let posts: PostData[] = [];
   try {
     const result = await getFeaturedPosts();
     posts = result.docs;
