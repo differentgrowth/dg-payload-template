@@ -65,7 +65,7 @@ export const PostsList = ({ posts, className, variant = "default" }: Props) => {
 
           return (
             <article
-              className="group relative flex flex-col overflow-hidden rounded-xl border border-border/50 bg-card transition-all duration-300 hover:border-border hover:shadow-black/5 hover:shadow-lg dark:hover:shadow-black/20"
+              className="group relative flex flex-col overflow-hidden rounded-xl border border-border/50 bg-card transition-all duration-300 content-visibility-auto hover:border-border hover:shadow-black/5 hover:shadow-lg dark:hover:shadow-black/20"
               key={id}
             >
               {/* Image */}

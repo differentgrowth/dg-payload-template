@@ -1,12 +1,11 @@
 /** biome-ignore-all lint/style/noMagicNumbers: percentages */
 "use client";
 
+import type { ComponentProps, ReactNode } from "react";
 import {
-  type ComponentProps,
   createContext,
   type HTMLAttributes,
   type MouseEventHandler,
-  type ReactNode,
   type TouchEventHandler,
   useContext,
   useMemo,

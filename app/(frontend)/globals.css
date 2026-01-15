@@ -655,3 +655,14 @@
 .dark .prose code .token-function {
   color: oklch(0.7 0.15 280);
 }
+
+/* =============================================================================
+   PERFORMANCE UTILITIES
+   ============================================================================= */
+
+/* Content visibility optimization for long lists
+   Skips rendering of off-screen content for better performance */
+@utility content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
+}

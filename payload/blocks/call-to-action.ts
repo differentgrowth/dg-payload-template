@@ -1,5 +1,7 @@
 import type { Block } from "payload";
 
+import { linkField } from "@/payload/fields/link";
+
 export const CallToAction: Block = {
   slug: "callToAction",
   interfaceName: "CallToActionBlock",
@@ -42,19 +44,12 @@ export const CallToAction: Block = {
           label: { es: "Texto del botón", en: "Button text" },
           defaultValue: "Quiero pedir cita",
         },
-        {
+        linkField({
           name: "path",
           label: { es: "URL", en: "URL" },
-          type: "text",
-          required: false,
+          type: "any",
           defaultValue: "/contacto",
-          admin: {
-            description: {
-              es: 'Puede empezar por "/" si está dentro de la web o ser una url completa (https://)',
-              en: 'It can start with "/" if it is inside the web or be a complete url (https://)',
-            },
-          },
-        },
+        }),
       ],
     },
     {
@@ -77,12 +72,11 @@ export const CallToAction: Block = {
           required: false,
           label: { es: "Texto del botón", en: "Button text" },
         },
-        {
+        linkField({
           name: "path",
           label: { es: "URL", en: "URL" },
-          type: "text",
-          required: false,
-        },
+          type: "any",
+        }),
       ],
       admin: {
         condition: (_, { enableSecondaryButton }) => enableSecondaryButton,

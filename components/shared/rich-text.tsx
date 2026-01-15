@@ -62,7 +62,7 @@ function isMarkdownCodeBlock(text: string): {
   }
 
   const firstLine = lines[0].trim();
-  const lastLine = lines.at(-1).trim();
+  const lastLine = lines.at(-1)?.trim() ?? "";
 
   const startMatch = firstLine.match(CODE_BLOCK_START_REGEX);
   const endsWithBackticks = CODE_BLOCK_END_REGEX.test(lastLine);

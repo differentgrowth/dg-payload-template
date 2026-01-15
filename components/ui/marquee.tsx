@@ -1,6 +1,6 @@
 "use client";
 
-import React, { type ComponentPropsWithoutRef, useRef } from "react";
+import React, { type ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -63,8 +63,6 @@ export function Marquee({
   ariaRole = "marquee",
   ...props
 }: MarqueeProps) {
-  const marqueeRef = useRef<HTMLDivElement>(null);
-
   return (
     <div
       {...props}
@@ -79,7 +77,6 @@ export function Marquee({
         className
       )}
       data-slot="marquee"
-      ref={marqueeRef}
       role={ariaRole}
       tabIndex={0}
     >

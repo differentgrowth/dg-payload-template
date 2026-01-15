@@ -11,8 +11,20 @@ type Props = LatestPostsBlockProps & {
   className?: string;
 };
 
+type PostData = Pick<
+  Post,
+  | "slug"
+  | "categories"
+  | "title"
+  | "description"
+  | "id"
+  | "image"
+  | "publishedAt"
+  | "authors"
+>;
+
 export async function LatestPosts({ title, subtitle, className }: Props) {
-  let posts: Post[] = [];
+  let posts: PostData[] = [];
   try {
     const result = await getPosts({ page: 1, quantity: 3 });
     posts = result.docs;

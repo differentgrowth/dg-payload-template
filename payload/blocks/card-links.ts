@@ -1,5 +1,7 @@
 import type { Block } from "payload";
 
+import { linkField } from "@/payload/fields/link";
+
 export const CardLinks: Block = {
   slug: "cardLinks",
   interfaceName: "CardLinksBlock",
@@ -27,18 +29,7 @@ export const CardLinks: Block = {
           type: "text",
           required: true,
         },
-        {
-          name: "url",
-          label: { es: "URL", en: "URL" },
-          type: "text",
-          required: true,
-          admin: {
-            description: {
-              es: 'Si es URL interna, debe comenzar con "/".',
-              en: 'If it is an internal URL, it must start with "/".',
-            },
-          },
-        },
+        linkField({ type: "any", required: true }),
         {
           name: "image",
           label: { es: "Imagen", en: "Image" },

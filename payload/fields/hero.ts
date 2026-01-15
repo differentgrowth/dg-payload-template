@@ -2,6 +2,8 @@ import type { Field } from "payload";
 
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
+import { linkField } from "@/payload/fields/link";
+
 export const hero: Field = {
   name: "hero",
   type: "group",
@@ -55,11 +57,11 @@ export const hero: Field = {
           label: { es: "Texto del enlace", en: "Link text" },
           type: "text",
         },
-        {
+        linkField({
           name: "path",
           label: { es: "Ruta del enlace", en: "Link path" },
-          type: "text",
-        },
+          type: "any",
+        }),
       ],
       admin: {
         condition: (_, { enablePrimaryLink }) => enablePrimaryLink,
@@ -85,11 +87,11 @@ export const hero: Field = {
           label: { es: "Texto del enlace", en: "Link text" },
           type: "text",
         },
-        {
+        linkField({
           name: "path",
           label: { es: "Ruta del enlace", en: "Link path" },
-          type: "text",
-        },
+          type: "any",
+        }),
       ],
       admin: {
         condition: (_, { enableSecondaryLink }) => enableSecondaryLink,
