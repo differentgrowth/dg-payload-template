@@ -1,1 +1,0 @@
-../../.opencode/agents/payloadcms-auditor.md
