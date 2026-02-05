@@ -7,6 +7,7 @@ import { Hero } from "@/components/blocks/hero";
 import { RenderBlocks } from "@/components/blocks/render-blocks";
 import { LivePreviewListener } from "@/components/payload/live-preview-listener";
 import { SchemaMarkup } from "@/components/shared/schema-markup";
+import { indexRobots, noIndexRobots } from "@/lib/generate-meta";
 import { getServerSideURL } from "@/lib/get-url";
 import { getHomePage } from "@/queries/get-homepage";
 
@@ -18,6 +19,7 @@ function getImageUrl(image: Media | number | null | undefined): string | null {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const { isEnabled: draft } = await draftMode();
   const page = await getHomePage();
   const serverUrl = getServerSideURL();
 
@@ -60,19 +62,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       ...(imageUrl ? { images: [`${serverUrl}${imageUrl}`] } : {}),
     },
-    robots: {
-      index: true,
-      follow: true,
-      nocache: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        noimageindex: false,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
+    robots: draft ? noIndexRobots : indexRobots,
   };
 }
 

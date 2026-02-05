@@ -1,7 +1,8 @@
 /** biome-ignore-all lint/style/useNamingConvention: payloadcms convention */
 import type { CollectionConfig } from "payload";
 
-import { admins, anyone, checkRole } from "@/lib/access";
+import { admins, adminsAndUser, anyone, checkRole } from "@/lib/access";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -13,7 +14,7 @@ export const Users: CollectionConfig = {
     create: admins,
     delete: admins,
     read: anyone,
-    update: anyone,
+    update: adminsAndUser,
     unlock: admins,
     admin: ({ req: { user } }) => checkRole("admin", user),
   },
@@ -22,7 +23,7 @@ export const Users: CollectionConfig = {
     defaultColumns: ["name", "email", "role"],
     useAsTitle: "name",
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Ajustes", en: "Settings" },
+    group: ADMIN_GROUPS.settings,
   },
   defaultSort: "email",
   timestamps: true,

@@ -10,6 +10,7 @@ import {
   revalidatePagesAfterDelete,
 } from "@/payload/hooks/revalidate-pages";
 import { validateSlug } from "@/payload/hooks/validate-slug";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 import { PageBlocks } from "@/payload-config/page-blocks";
 
 export const Pages: CollectionConfig = {
@@ -34,10 +35,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: "label",
     defaultColumns: ["label", "slug", "shownIn", "_status", "updatedAt"],
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: {
-      en: "Pages",
-      es: "Páginas",
-    },
+    group: ADMIN_GROUPS.pages,
     livePreview: {
       url: ({ data }) => {
         const folder = data?.folder;
@@ -77,7 +75,9 @@ export const Pages: CollectionConfig = {
   folders: true,
   versions: {
     drafts: {
-      schedulePublish: true,
+      schedulePublish: {
+        timeIntervals: 60,
+      },
     },
     maxPerDoc: 25,
   },

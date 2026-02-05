@@ -16,4 +16,17 @@ export const jobs: NonNullable<Config["jobs"]> = {
     },
   },
   tasks: [],
+  jobsCollectionOverrides: ({ defaultJobsCollection }) => {
+    if (!defaultJobsCollection.admin) {
+      defaultJobsCollection.admin = {};
+    }
+
+    defaultJobsCollection.admin.hidden = process.env.NODE_ENV !== "development";
+    defaultJobsCollection.admin.group = {
+      en: "Management",
+      es: "Administración",
+    };
+
+    return defaultJobsCollection;
+  },
 };

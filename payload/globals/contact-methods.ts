@@ -3,6 +3,7 @@ import type { GlobalConfig } from "payload";
 
 import { admins, anyone } from "@/lib/access";
 import { revalidateContactMethods } from "@/payload/hooks/revalidate-contact-methods";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const ContactMethods: GlobalConfig = {
   slug: "contact-methods",
@@ -16,7 +17,7 @@ export const ContactMethods: GlobalConfig = {
       en: "Available contact methods",
     },
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Conectar y Compartir", en: "Connect & Share" },
+    group: ADMIN_GROUPS.connectAndShare,
   },
   label: { es: "Métodos de contacto", en: "Contact Methods" },
   hooks: {

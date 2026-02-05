@@ -2,6 +2,7 @@
 import type { CollectionConfig } from "payload";
 
 import { admins, anyone } from "@/lib/access";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const Categories: CollectionConfig = {
   slug: "categories",
@@ -18,7 +19,7 @@ export const Categories: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Ajustes", en: "Settings" },
+    group: ADMIN_GROUPS.settings,
   },
   fields: [
     {

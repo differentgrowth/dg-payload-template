@@ -3,6 +3,7 @@ import type { GlobalConfig } from "payload";
 
 import { admins, anyone } from "@/lib/access";
 import { revalidateSocialMedia } from "@/payload/hooks/revalidate-social-media";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const SocialMedia: GlobalConfig = {
   slug: "social-media",
@@ -13,7 +14,7 @@ export const SocialMedia: GlobalConfig = {
   label: { es: "Redes Sociales", en: "Social Media Links" },
   admin: {
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Conectar y Compartir", en: "Connect & Share" },
+    group: ADMIN_GROUPS.connectAndShare,
   },
   hooks: {
     afterChange: [revalidateSocialMedia],

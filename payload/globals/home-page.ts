@@ -5,6 +5,7 @@ import { admins, anyone } from "@/lib/access";
 import { generateGlobalPreviewPath } from "@/lib/generate-preview-path";
 import { hero } from "@/payload/fields/hero";
 import { revalidateHomePage } from "@/payload/hooks/revalidate-homepage";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 import { PageBlocks } from "@/payload-config/page-blocks";
 
 export const HomePage: GlobalConfig = {
@@ -16,7 +17,7 @@ export const HomePage: GlobalConfig = {
   label: { es: "Página de inicio", en: "Homepage" },
   admin: {
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Páginas", en: "Pages" },
+    group: ADMIN_GROUPS.pages,
     livePreview: {
       url: () => generateGlobalPreviewPath({ global: "home-page" }),
     },

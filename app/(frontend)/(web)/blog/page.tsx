@@ -7,6 +7,7 @@ import { BlogPagination } from "@/components/blog/pagination";
 import { PostsList } from "@/components/blog/posts-list";
 import { LivePreviewListener } from "@/components/payload/live-preview-listener";
 import { SchemaMarkup } from "@/components/shared/schema-markup";
+import { indexRobots, noIndexRobots } from "@/lib/generate-meta";
 import { getServerSideURL } from "@/lib/get-url";
 import { getBlogPage } from "@/queries/get-blog-page";
 import { getPosts } from "@/queries/get-posts";
@@ -19,6 +20,7 @@ function getImageUrl(image: Media | string | null | undefined): string | null {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const { isEnabled: draft } = await draftMode();
   const page = await getBlogPage();
   const serverUrl = getServerSideURL();
 
@@ -61,19 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       ...(imageUrl ? { images: [`${serverUrl}${imageUrl}`] } : {}),
     },
-    robots: {
-      index: true,
-      follow: true,
-      nocache: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        noimageindex: false,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
+    robots: draft ? noIndexRobots : indexRobots,
   };
 }
 

@@ -5,6 +5,7 @@ import { admins, anyone } from "@/lib/access";
 import { generateGlobalPreviewPath } from "@/lib/generate-preview-path";
 import { hero } from "@/payload/fields/hero";
 import { revalidateContactPage } from "@/payload/hooks/revalidate-contact-page";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 import { PageBlocks } from "@/payload-config/page-blocks";
 
 export const ContactPage: GlobalConfig = {
@@ -16,7 +17,7 @@ export const ContactPage: GlobalConfig = {
   label: { es: "Página de contacto", en: "Contact Page" },
   admin: {
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Páginas", en: "Pages" },
+    group: ADMIN_GROUPS.pages,
     livePreview: {
       url: () => generateGlobalPreviewPath({ global: "contact-page" }),
     },

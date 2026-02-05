@@ -3,6 +3,34 @@ import type { Config, Media, Page, Post } from "@/payload-types";
 
 import { getServerSideURL } from "@/lib/get-url";
 
+export const indexRobots: Metadata["robots"] = {
+  index: true,
+  follow: true,
+  nocache: true,
+  googleBot: {
+    index: true,
+    follow: true,
+    noimageindex: false,
+    "max-video-preview": -1,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+  },
+};
+
+export const noIndexRobots: Metadata["robots"] = {
+  index: false,
+  follow: false,
+  nocache: true,
+  googleBot: {
+    index: false,
+    follow: false,
+    noimageindex: true,
+    "max-video-preview": -1,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+  },
+};
+
 const getImageUrl = (
   image?: Media | Config["db"]["defaultIDType"] | null
 ): string | undefined => {
@@ -88,19 +116,7 @@ export const generateMeta = async (args: {
         ...(ogImage ? { images: [ogImage] } : {}),
       },
       title: { absolute: title },
-      robots: {
-        index: false,
-        follow: false,
-        nocache: true,
-        googleBot: {
-          index: false,
-          follow: false,
-          noimageindex: true,
-          "max-video-preview": -1,
-          "max-image-preview": "large",
-          "max-snippet": -1,
-        },
-      },
+      robots: noIndexRobots,
     };
   }
 

@@ -54,7 +54,11 @@ export default buildConfig({
   globals,
   folders,
   editor,
-  secret: process.env.PAYLOAD_SECRET || "",
+  secret:
+    process.env.PAYLOAD_SECRET ??
+    (() => {
+      throw new Error("PAYLOAD_SECRET environment variable is required");
+    })(),
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },

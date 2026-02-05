@@ -4,6 +4,7 @@ import type { GlobalConfig } from "payload";
 import { admins, anyone } from "@/lib/access";
 import { linkField } from "@/payload/fields/link";
 import { revalidateLinks } from "@/payload/hooks/revalidate-links";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const Links: GlobalConfig = {
   slug: "links",
@@ -14,7 +15,7 @@ export const Links: GlobalConfig = {
   label: { es: "Enlaces", en: "Links" },
   admin: {
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Conectar y Compartir", en: "Connect & Share" },
+    group: ADMIN_GROUPS.connectAndShare,
   },
   hooks: {
     afterChange: [revalidateLinks],

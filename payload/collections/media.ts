@@ -6,6 +6,7 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 import { admins, anyone } from "@/lib/access";
 import { humanReadableFilesize } from "@/payload/fields/filesize";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const Media: CollectionConfig = {
   slug: "media",
@@ -29,7 +30,7 @@ export const Media: CollectionConfig = {
     ],
     useAsTitle: "filename",
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Multimedia", en: "Media" },
+    group: ADMIN_GROUPS.media,
   },
   defaultPopulate: {
     alt: true,

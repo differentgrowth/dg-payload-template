@@ -5,6 +5,7 @@ import { admins, anyone } from "@/lib/access";
 import { generateGlobalPreviewPath } from "@/lib/generate-preview-path";
 import { hero } from "@/payload/fields/hero";
 import { revalidateBlogPage } from "@/payload/hooks/revalidate-blog-page";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const BlogPage: GlobalConfig = {
   slug: "blog-page",
@@ -15,7 +16,7 @@ export const BlogPage: GlobalConfig = {
   label: { es: "Directorio de Blog", en: "Blog directory" },
   admin: {
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Páginas", en: "Pages" },
+    group: ADMIN_GROUPS.pages,
     livePreview: {
       url: () => generateGlobalPreviewPath({ global: "blog-page" }),
     },

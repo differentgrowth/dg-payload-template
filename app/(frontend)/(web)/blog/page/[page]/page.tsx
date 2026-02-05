@@ -1,11 +1,13 @@
 import type { Metadata } from "next/types";
 import type { Media } from "@/payload-types";
 
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { BlogPagination } from "@/components/blog/pagination";
 import { PostsList } from "@/components/blog/posts-list";
 import { SchemaMarkup } from "@/components/shared/schema-markup";
+import { indexRobots, noIndexRobots } from "@/lib/generate-meta";
 import { getServerSideURL } from "@/lib/get-url";
 import { getBlogPage } from "@/queries/get-blog-page";
 import { getTotalBlogDirectoryPages } from "@/queries/get-post-count";
@@ -27,6 +29,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params: paramsPromise,
 }: PageProps<"/blog/page/[page]">): Promise<Metadata> {
+  const { isEnabled: draft } = await draftMode();
   const { page: pageNumber } = await paramsPromise;
   const page = await getBlogPage();
   const serverUrl = getServerSideURL();
@@ -70,19 +73,7 @@ export async function generateMetadata({
       description,
       ...(imageUrl ? { images: [`${serverUrl}${imageUrl}`] } : {}),
     },
-    robots: {
-      index: true,
-      follow: true,
-      nocache: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        noimageindex: false,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
+    robots: draft ? noIndexRobots : indexRobots,
   };
 }
 

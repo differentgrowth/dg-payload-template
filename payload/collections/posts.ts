@@ -14,6 +14,7 @@ import {
   revalidatePosts,
   revalidatePostsAfterDelete,
 } from "@/payload/hooks/revalidate-posts";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const Posts: CollectionConfig = {
   slug: "posts",
@@ -38,7 +39,7 @@ export const Posts: CollectionConfig = {
       "updatedAt",
     ],
     hideAPIURL: process.env.NODE_ENV === "production",
-    group: { es: "Páginas", en: "Pages" },
+    group: ADMIN_GROUPS.pages,
     livePreview: {
       url: ({ data }) =>
         generatePreviewPath({
@@ -72,7 +73,9 @@ export const Posts: CollectionConfig = {
   timestamps: true,
   versions: {
     drafts: {
-      schedulePublish: true,
+      schedulePublish: {
+        timeIntervals: 60,
+      },
     },
     maxPerDoc: 25,
   },

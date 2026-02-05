@@ -7,6 +7,7 @@ import { convertLexicalToPlaintext } from "@payloadcms/richtext-lexical/plaintex
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 
 import { revalidateRedirects } from "@/payload/hooks/revalidate-redirects";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 const isVercelBlobEnabled =
   process.env.NODE_ENV === "production" &&
@@ -66,7 +67,7 @@ export const redirectPluginConfig = redirectsPlugin({
       plural: { es: "Redirecciones", en: "Redirects" },
     },
     admin: {
-      group: { en: "Settings", es: "Ajustes" },
+      group: ADMIN_GROUPS.settings,
     },
     hooks: {
       afterChange: [revalidateRedirects],

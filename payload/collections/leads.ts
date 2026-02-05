@@ -3,6 +3,7 @@ import type { CollectionConfig } from "payload";
 
 import { admins, anyone } from "@/lib/access";
 import { sendEmailAfterLeadCreation } from "@/payload/hooks/send-email-after-lead-creation";
+import { ADMIN_GROUPS } from "@/payload-config/groups";
 
 export const Leads: CollectionConfig = {
   slug: "leads",
@@ -20,7 +21,7 @@ export const Leads: CollectionConfig = {
     useAsTitle: "name",
     hideAPIURL: process.env.NODE_ENV === "production",
     defaultColumns: ["name", "email", "phone", "createdAt"],
-    group: { es: "Conectar y Compartir", en: "Connect & Share" },
+    group: ADMIN_GROUPS.connectAndShare,
   },
   timestamps: true,
   hooks: {
